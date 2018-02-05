@@ -1,15 +1,19 @@
 class Application
 
-  def call(env) #issues with test and UTC, beyond irritating
-    resp = Rack::Response.new
-    time = Time.now
-      if time.hour > 12 && time.hour <=23
-        resp.write "Good Afternoon!"
-      elsif time.hour >= 0 && time.hour < 12
-        resp.write "Good Morning!"
+  @@items = ["Apples","Carrots","Pears"]
 
+  def call(env)
+    resp = Rack::Response.new
+    req = Rack::Request.new(env)
+
+    if req.path.match(/items/)
+      @@items.each do |item|
+        resp.write "#{item}\n"
       end
+    else
+      resp.write "Path Not Found"
+    end
+
     resp.finish
   end
-
 end
